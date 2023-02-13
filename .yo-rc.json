@@ -1,0 +1,14 @@
+{
+  "generator-fullstack-app": {
+    "appName": "imcgill-fav-color",
+    "repoName": "my-byu-app",
+    "orgName": "byu-oit-training",
+    "awsAccountDev": "byu-oit-name-dev",
+    "awsAccountPrd": "byu-oit-name-prd",
+    "awsAccountDevNumber": "863362256468",
+    "awsAccountPrdNumber": "863362256468",
+    "confirmStandardChangeTemplate": false,
+    "standardChangeTemplate": "Codepipeline-Standard-Change",
+    "template": "fargate-api"
+  }
+}

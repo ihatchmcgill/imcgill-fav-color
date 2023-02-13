@@ -1,0 +1,11 @@
+version: '3'
+services:
+  app:
+    build: app
+    ports:
+    - 8080:8080
+    environment:
+      NODE_ENV: local
+
+# You can include a postgres docker image to mimic your relational RDS database locally
+# or use the amazon/dynamodb-local image to mimic a dynamo db table locally

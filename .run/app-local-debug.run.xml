@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="app-local-debug" type="NodeJSConfigurationType" node-parameters="-r ts-node/register -r dotenv/config --trace-deprecation" path-to-js-file="src/index.ts" working-dir="$PROJECT_DIR$/app">
+    <method v="2" />
+  </configuration>
+</component>
