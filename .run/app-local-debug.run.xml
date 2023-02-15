@@ -1,5 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="app-local-debug" type="NodeJSConfigurationType" node-parameters="-r ts-node/register -r dotenv/config --trace-deprecation" path-to-js-file="src/index.ts" working-dir="$PROJECT_DIR$/app">
+    <envs>
+      <env name="AWS_PROFILE" value="byu-oit-fullstack-trn" />
+    </envs>
     <method v="2" />
   </configuration>
 </component>

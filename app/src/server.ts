@@ -13,7 +13,7 @@ export default async function server (): Promise<Application> {
 
   // Health check
   app.get('/health', (req: Request, res: Response) => {
-    res.status(200).send('healthy')
+    res.status(200).send('good job genius')
   })
 
   // Add express logs to all calls after
