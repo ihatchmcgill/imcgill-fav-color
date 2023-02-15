@@ -197,13 +197,13 @@ jobs:
           divvycloud-username: ${{ secrets.DIVVYCLOUD_USERNAME }}
           divvycloud-password: ${{ secrets.DIVVYCLOUD_PASSWORD }}
 
-      - name: Start Standard Change
-        uses: byu-oit/github-action-start-standard-change@v1
-        id: start-standard-change
-        with:
-          client-key: ${{ secrets[matrix.env.rfc_key_name] }}
-          client-secret: ${{ secrets[matrix.env.rfc_secret_name] }}
-          template-id: ${{ matrix.env.rfc_template_id }}
+#       - name: Start Standard Change
+#         uses: byu-oit/github-action-start-standard-change@v1
+#         id: start-standard-change
+#         with:
+#           client-key: ${{ secrets[matrix.env.rfc_key_name] }}
+#           client-secret: ${{ secrets[matrix.env.rfc_secret_name] }}
+#           template-id: ${{ matrix.env.rfc_template_id }}
 
       - name: Terraform Apply
         working-directory: ${{ matrix.env.tf_working_dir }}
@@ -226,15 +226,15 @@ jobs:
           deployment-group-name: ${{ steps.terraform-outputs.outputs.codedeploy_deployment_group_name }}
           appspec-file: ${{ steps.terraform-outputs.outputs.codedeploy_appspec_json_file }}
 
-      - name: End Standard Change
-        uses: byu-oit/github-action-end-standard-change@v1
-        if: always() && steps.start-standard-change.outcome == 'success' # Run if RFC started, even if the deploy failed
-        with:
-          client-key: ${{ secrets[matrix.env.rfc_key_name] }}
-          client-secret: ${{ secrets[matrix.env.rfc_secret_name] }}
-          change-sys-id: ${{ steps.start-standard-change.outputs.change-sys-id }}
-          work-start: ${{ steps.start-standard-change.outputs.work-start }}
-          success: ${{ job.status == 'success' }}
+#       - name: End Standard Change
+#         uses: byu-oit/github-action-end-standard-change@v1
+#         if: always() && steps.start-standard-change.outcome == 'success' # Run if RFC started, even if the deploy failed
+#         with:
+#           client-key: ${{ secrets[matrix.env.rfc_key_name] }}
+#           client-secret: ${{ secrets[matrix.env.rfc_secret_name] }}
+#           change-sys-id: ${{ steps.start-standard-change.outputs.change-sys-id }}
+#           work-start: ${{ steps.start-standard-change.outputs.work-start }}
+#           success: ${{ job.status == 'success' }}
 
 #       TODO uncomment after adding MS_TEAMS_WEBHOOK_URL to your GitHub actions secrets
 #      - name: Teams Notification
