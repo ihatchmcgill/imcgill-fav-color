@@ -13,6 +13,10 @@ export default async function server (): Promise<Application> {
 
   // Health check
   app.get('/health', (req: Request, res: Response) => {
+    res.status(200).send('healthy')
+  })
+
+  app.get('/test', (req: Request, res: Response) => {
     res.status(200).send('good job genius')
   })
 
