@@ -6,7 +6,7 @@ info:
 
 paths:
   /foo:
-    x-controller: foo
+    x-controller: favColor
     get:
       x-operation: getFoo
       responses:
@@ -18,3 +18,183 @@ paths:
                 properties:
                   bar:
                     type: string
+  /:
+    x-controller: favColor
+    get:
+      x-operation: listFavoriteColors
+      summary: List favorite colors
+      description: Retrieves a list of all favorite colors with the ability to filter by color.
+      parameters:
+        - $ref: '#/components/parameters/filterByColorParam'
+      responses:
+        200:
+          description: An array of favorite colors (option to filter by color)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/favoriteColorArray'
+        400:
+            $ref: '#/components/responses/400'
+        401:
+            $ref: '#/components/responses/401'
+        404:
+            $ref: '#/components/responses/404'
+        default:
+            $ref: '#/components/responses/default'
+    post:
+      x-operation: addFavoriteColor
+      summary: Add a favorite color
+      description: Add a new student's favorite color
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/favoriteColorObject'
+      responses:
+        200:
+          description: Favorite color added
+          headers:
+            Location:
+              description: Favorite Color location header
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          $ref: '#/components/responses/404'
+        default:
+          $ref: '#/components/responses/default'
+  /{byuId}:
+    x-controller: favColor
+    parameters:
+      - $ref: '#/components/parameters/byuIdParam'
+    get:
+      x-operation: getFavoriteColor
+      summary: Return student's fav color
+      description: Given a specific byu-id, the fav color of the corresponding student is returned.
+      responses:
+        200:
+          description: Returned favorite color
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/favoriteColorObject'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          $ref: '#/components/responses/404'
+        default:
+          $ref: '#/components/responses/default'
+    put:
+      x-operation: updateFavoriteColor
+      summary: Update a fav color
+      description: Given a specific byu-id, the fav color of the corresponding student is updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/favoriteColorObject'
+      responses:
+        200:
+          description: The saved favorite color
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/favoriteColorObject'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          $ref: '#/components/responses/404'
+        default:
+          $ref: '#/components/responses/default'
+    delete:
+      x-operation: removeFavoriteColor
+      summary: Remove a student's favorite color
+      responses:
+        200:
+          description: The removed favorite color
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Success
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          $ref: '#/components/responses/404'
+        default:
+          $ref: '#/components/responses/default'
+
+
+components:
+  schemas:
+    favoriteColorObject:
+      type: object
+      properties:
+        byuId:
+          type: string
+          pattern: '^\d{9}$'
+          example: '123456789'
+        favColor:
+          type: string
+          example: 'red'
+    favoriteColorArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/favoriteColorObject'
+      example: [ { byuId: '123456789', favColor: 'red' }, { byuId: '987654321', favColor: 'blue' } ]
+    error_response:
+        type: string
+  responses:
+    400:
+      description: Invalid Request - unable to interpret request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_response'
+    401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_response'
+    404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_response'
+    default:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_response'
+  parameters:
+    byuIdParam:
+      name: byuId
+      in: path
+      description: a BYU Id
+      required: true
+      schema:
+        type: string
+        pattern: '^\d{9}$'
+    filterByColorParam:
+      in: query
+      name: filter
+      schema:
+        type: array
+        items:
+          type: string
+      required: false
+      description: comma-separated list of colors
