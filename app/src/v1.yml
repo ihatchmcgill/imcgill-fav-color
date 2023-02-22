@@ -5,19 +5,6 @@ info:
   version: 1.0.0
 
 paths:
-  /foo:
-    x-controller: favColor
-    get:
-      x-operation: getFoo
-      responses:
-        200:
-          description: foo bar
-          content:
-            application/json:
-              schema:
-                properties:
-                  bar:
-                    type: string
   /:
     x-controller: favColor
     get:
@@ -41,34 +28,8 @@ paths:
             $ref: '#/components/responses/404'
         default:
             $ref: '#/components/responses/default'
-    post:
-      x-operation: addFavoriteColor
-      summary: Add a favorite color
-      description: Add a new student's favorite color
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/favoriteColorObject'
-      responses:
-        200:
-          description: Favorite color added
-          headers:
-            Location:
-              description: Favorite Color location header
-              schema:
-                type: string
-        400:
-          $ref: '#/components/responses/400'
-        401:
-          $ref: '#/components/responses/401'
-        404:
-          $ref: '#/components/responses/404'
-        default:
-          $ref: '#/components/responses/default'
   /{byuId}:
-    x-controller: favColor
+    x-controller: byuId
     parameters:
       - $ref: '#/components/parameters/byuIdParam'
     get:
@@ -102,11 +63,27 @@ paths:
               $ref: '#/components/schemas/favoriteColorObject'
       responses:
         200:
-          description: The saved favorite color
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/favoriteColorObject'
+          $ref: '#/components/responses/200'
+        400:
+          $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          $ref: '#/components/responses/404'
+        default:
+          $ref: '#/components/responses/default'
+    post:
+      x-operation: addFavoriteColor
+      summary: Add student and their favorite color
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/favoriteColorObject'
+      responses:
+        200:
+          $ref: '#/components/responses/200'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -120,12 +97,7 @@ paths:
       summary: Remove a student's favorite color
       responses:
         200:
-          description: The removed favorite color
-          content:
-            application/json:
-              schema:
-                type: string
-                example: Success
+          $ref: '#/components/responses/200'
         400:
           $ref: '#/components/responses/400'
         401:
@@ -156,6 +128,13 @@ components:
     error_response:
         type: string
   responses:
+    200:
+      description: Operation Successful
+      content:
+        application/json:
+          schema:
+            type: string
+            example: 'Favorite Color Removed For: {Student}'
     400:
       description: Invalid Request - unable to interpret request
       content:

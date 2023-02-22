@@ -3,8 +3,9 @@ import OpenApiEnforcer from 'openapi-enforcer'
 import EnforcerMiddleware from 'openapi-enforcer-middleware'
 import path from 'path'
 import { logger } from './index'
-import foo from './routes/foo'
 import { LoggerMiddleware } from '@byu-oit/express-logger'
+import favColor from "./routes/favColor";
+import byuId from "./routes/byuId";
 
 export default async function server (): Promise<Application> {
   const app = express()
@@ -38,8 +39,10 @@ export default async function server (): Promise<Application> {
 
   // Tell the route builder to handle routing requests.
   app.use(enforcerMiddleware.route({
-    foo: foo()
+    favColor: favColor(),
+    byuId: byuId()
   }))
 
+  app.use(enforcerMiddleware.mock())
   return app
 }
