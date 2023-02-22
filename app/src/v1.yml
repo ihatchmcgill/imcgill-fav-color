@@ -5,6 +5,19 @@ info:
   version: 1.0.0
 
 paths:
+  /foo:
+    x-controller: foo
+    get:
+      x-operation: getFoo
+      responses:
+        200:
+          description: foo bar
+          content:
+            application/json:
+              schema:
+                properties:
+                  bar:
+                    type: string
   /:
     x-controller: favColor
     get:
