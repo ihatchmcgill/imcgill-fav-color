@@ -6,7 +6,7 @@ import { logger } from './index'
 import { LoggerMiddleware } from '@byu-oit/express-logger'
 import favColor from './routes/favColor'
 import byuId from './routes/byuId'
-import foo from "./routes/foo";
+import foo from './routes/foo'
 
 export default async function server (): Promise<Application> {
   const app = express()
