@@ -41,7 +41,7 @@ module "my_fargate_api" {
   container_port                   = 8080
   health_check_path                = "/health"
   codedeploy_test_listener_port    = 4443
-  task_policies                    = []
+  task_policies                    = [aws_iam_policy.dynamo_access.arn]
   hosted_zone                      = module.acs.route53_zone
   https_certificate_arn            = module.acs.certificate.arn
   public_subnet_ids                = module.acs.public_subnet_ids
@@ -76,13 +76,47 @@ module "my_fargate_api" {
     BeforeAllowTraffic    = null
     AfterAllowTraffic     = null
   }
+
 }
 
 // Databases
 // If RDS is needed use the https://github.com/byu-oit/terraform-aws-rds/
 // If DynamoDB Table is needed use the aws_dynamodb_table resource https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table
 // Then include the task policies and any env variables or secrets into the fargate module
-
+resource "aws_dynamodb_table" "my_dynamo_table" {
+  hash_key     = "byuId"
+  name         = "${local.repo_name}-${var.env}"
+  billing_mode = "PAY_PER_REQUEST"
+  attribute {
+    name = "byuId"
+    type = "S"
+  }
+}
+resource "aws_iam_policy" "dynamo_access" {
+  name        = "${aws_dynamodb_table.my_dynamo_table.name}-access"
+  description = "Access to the ${aws_dynamodb_table.my_dynamo_table.name} DynamoDB table"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "dynamodb:DescribeTable",
+          "dynamodb:Get*",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:Update*",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem"
+        ],
+        Resource = [
+          aws_dynamodb_table.my_dynamo_table.arn,
+          "${aws_dynamodb_table.my_dynamo_table.arn}/index/*"
+        ]
+      }
+    ]
+  })
+}
 // Smoke Test
 module "postman_test_lambda" {
   source   = "github.com/byu-oit/terraform-aws-postman-test-lambda?ref=v5.0.0"
