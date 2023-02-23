@@ -1,5 +1,4 @@
 import server from '../src/server'
-// @ts-expect-error
 import request from 'supertest'
 import { Application } from 'express'
 
