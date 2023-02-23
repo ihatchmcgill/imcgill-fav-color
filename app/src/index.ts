@@ -1,8 +1,8 @@
 import server from './server'
 import defaultLogger from '@byu-oit/logger'
 import { Logger } from 'pino'
-import { DynamoDBClient} from '@aws-sdk/client-dynamodb'
-import {DynamoDBDocumentClient, PutCommand, ScanCommand} from '@aws-sdk/lib-dynamodb'
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { DynamoDBDocumentClient, ScanCommand } from '@aws-sdk/lib-dynamodb'
 
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION ?? 'us-west-2',
