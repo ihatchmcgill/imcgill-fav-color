@@ -140,14 +140,15 @@ components:
       example: [ { byuId: '123456789', favColor: 'red' }, { byuId: '987654321', favColor: 'blue' } ]
     error_response:
         type: string
+    success_response:
+      type: string
   responses:
     200:
       description: Operation Successful
-      content:
-        application/json:
+      headers:
+        location:
           schema:
-            type: string
-            example: 'Favorite Color Removed For: {Student}'
+            $ref: '#/components/schemas/success_response'
     400:
       description: Invalid Request - unable to interpret request
       content:
