@@ -8,7 +8,9 @@ import favColor from './routes/favColor'
 import byuId from './routes/byuId'
 import foo from './routes/foo'
 
-export default async function server (): Promise<Application> {
+import {DynamoDBDocumentClient} from "@aws-sdk/lib-dynamodb";
+
+export default async function server (dbDocClient: DynamoDBDocumentClient | any, TABLE_NAME: string): Promise<Application> {
   const app = express()
 
   app.use('/', express.json())
@@ -41,8 +43,8 @@ export default async function server (): Promise<Application> {
   // Tell the route builder to handle routing requests.
   app.use(enforcerMiddleware.route({
     foo: foo(),
-    favColor: favColor(),
-    byuId: byuId()
+    favColor: favColor(dbDocClient, TABLE_NAME),
+    byuId: byuId(dbDocClient, TABLE_NAME)
   }))
 
   app.use(enforcerMiddleware.mock())
