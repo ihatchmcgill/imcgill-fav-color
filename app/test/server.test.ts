@@ -1,13 +1,12 @@
 import server from '../src/server'
-// @ts-ignore
+// @ts-expect-error
 import request from 'supertest'
 import { Application } from 'express'
-import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBDocumentClient, ScanCommand, PutCommand, UpdateCommand, DeleteCommand, GetCommand} from "@aws-sdk/lib-dynamodb";
-
+import { mockClient } from 'aws-sdk-client-mock'
+import { DynamoDBDocumentClient, ScanCommand, PutCommand, UpdateCommand, DeleteCommand, GetCommand } from '@aws-sdk/lib-dynamodb'
 
 const TABLE_NAME = 'imcgill-fav-color-dev'
-const ddbMock = mockClient(DynamoDBDocumentClient);
+const ddbMock = mockClient(DynamoDBDocumentClient)
 
 ddbMock.on(ScanCommand).resolves({
   Items: [
@@ -16,7 +15,7 @@ ddbMock.on(ScanCommand).resolves({
 })
 
 ddbMock.on(GetCommand).resolves({
-  Item: { byuId: '123456789', favColor: 'mockColor' },
+  Item: { byuId: '123456789', favColor: 'mockColor' }
 })
 
 ddbMock.on(PutCommand).resolves({})
@@ -26,7 +25,7 @@ ddbMock.on(DeleteCommand).resolves({})
 let app: Application
 
 beforeAll(async () => {
-  //ddbMock.reset() doesn't work?
+  // ddbMock.reset() doesn't work?
   app = await server(ddbMock, TABLE_NAME)
 })
 
@@ -58,7 +57,6 @@ describe('GET /', () => {
     const response = await request(app).get('/?filter=red')
     expect(response.statusCode).toBe(200)
   })
-
 })
 
 describe('GET /{byu_Id}', () => {

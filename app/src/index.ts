@@ -14,7 +14,6 @@ const dbDocClient = DynamoDBDocumentClient.from(client)
 export const logger: Logger = defaultLogger()
 
 async function run (): Promise<void> {
-
   const response = await dbDocClient.send(new ScanCommand({ TableName: TABLE_NAME }))
   logger.info({ response }, 'DynamoDB response')
   const app = await server(dbDocClient, TABLE_NAME)
