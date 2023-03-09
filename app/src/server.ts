@@ -7,11 +7,13 @@ import { LoggerMiddleware } from '@byu-oit/express-logger'
 import favColor from './routes/favColor'
 import byuId from './routes/byuId'
 import foo from './routes/foo'
-
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb'
+let cors = require('cors')
 
 export default async function server (dbDocClient: DynamoDBDocumentClient | any, TABLE_NAME: string): Promise<Application> {
   const app = express()
+
+  app.use(cors())
 
   app.use('/', express.json())
 
