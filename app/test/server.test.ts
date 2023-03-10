@@ -9,12 +9,12 @@ const ddbMock = mockClient(DynamoDBDocumentClient)
 
 ddbMock.on(ScanCommand).resolves({
   Items: [
-    { byuId: '123456789', favColor: 'mockColor' }
+    { byuId: '123456789', favColorName: 'mockColorName', favColorId: 'purple' }
   ]
 })
 
 ddbMock.on(GetCommand).resolves({
-  Item: { byuId: '123456789', favColor: 'mockColor' }
+  Item: { byuId: '123456789', favColorName: 'mockColorName', favColorId: 'purple' }
 })
 
 ddbMock.on(PutCommand).resolves({})
@@ -49,7 +49,8 @@ describe('GET /', () => {
     expect(response.statusCode).toBe(200)
     const body = response.body[0]
     expect(body.byuId).toEqual('123456789')
-    expect(body.favColor).toEqual('mockColor')
+    expect(body.favColorName).toEqual('mockColorName')
+    expect(body.favColorId).toEqual('purple')
   })
 
   test('filter = red should return 200', async () => {
@@ -62,7 +63,8 @@ describe('GET /{byu_Id}', () => {
   test('should return 200', async () => {
     const response = await request(app).get('/123456789')
     expect(response.statusCode).toBe(200)
-    expect(response.body.favColor).toEqual('mockColor')
+    expect(response.body.favColorName).toEqual('mockColorName')
+    expect(response.body.favColorId).toEqual('purple')
   })
   test(' malformed byuId should return 400', async () => {
     const response = await request(app).get('/asfdaga32')
@@ -73,7 +75,8 @@ describe('GET /{byu_Id}', () => {
 describe('POST /{byu_Id}', () => {
   test('should return 200', async () => {
     const payload = {
-      favColor: 'red'
+      favColorName: 'red',
+      favColorId: 'testId'
     }
     const response = await request(app).post('/123456789').send(payload)
     expect(response.statusCode).toBe(200)
@@ -83,7 +86,8 @@ describe('POST /{byu_Id}', () => {
 describe('PUT /{byu_Id}', () => {
   test('should return 200', async () => {
     const payload = {
-      newFavColor: 'red'
+      newFavColorName: 'red',
+      newFavColorId: 'testId'
     }
     const response = await request(app).put('/123456789').send(payload)
     expect(response.statusCode).toBe(200)

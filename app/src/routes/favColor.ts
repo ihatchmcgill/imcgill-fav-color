@@ -16,7 +16,7 @@ export default function (dbClient: DynamoDBDocumentClient, tableName: string): R
           // filter
           if (filterColor !== undefined) {
             const filterList = (filterColor as string).split(',')
-            colors = colors.filter(item => filterList.includes(item.favColor.toLowerCase()))
+            colors = colors.filter(item => filterList.includes(item.favColorName.toLowerCase()))
           }
           res.enforcer?.status(200).send(colors)
         } else {

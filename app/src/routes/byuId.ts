@@ -18,11 +18,13 @@ export default function (dbClient: DynamoDBDocumentClient, tableName: string): R
         )
         const item = dbResponse.Item
         if (item != null) {
-          const favColor = item.favColor
-          logger.info(favColor)
+          const favColorName = item.favColorName
+          const favColorId = item.favColorId
+          logger.info(favColorName)
           res.enforcer?.send({
             byuId: givenByuId,
-            favColor
+            favColorName,
+            favColorId
           })
         } else {
           res.enforcer?.status(404).send('Not Found')
@@ -34,7 +36,8 @@ export default function (dbClient: DynamoDBDocumentClient, tableName: string): R
     },
     async updateFavoriteColor (req: Request, res: Response) {
       const givenByuId: string = req.enforcer?.params.byuId
-      const givenFavColor: string = req.enforcer?.body.newFavColor
+      const givenFavColorName: string = req.enforcer?.body.newFavColorName
+      const givenFavColorId: string = req.enforcer?.body.newFavColorId
       try {
         await dbClient.send(
           new UpdateCommand({
@@ -42,13 +45,25 @@ export default function (dbClient: DynamoDBDocumentClient, tableName: string): R
             Key: {
               byuId: givenByuId
             },
-            UpdateExpression: 'SET favColor = :favColor',
+            UpdateExpression: 'SET favColorName = :favColorName',
             ExpressionAttributeValues: {
-              ':favColor': givenFavColor
+              ':favColorName': givenFavColorName
             }
           })
         )
-        res.enforcer?.send(`Favorite Color For ${givenByuId} Updated To: ${givenFavColor}`)
+        await dbClient.send(
+          new UpdateCommand({
+            TableName: tableName,
+            Key: {
+              byuId: givenByuId
+            },
+            UpdateExpression: 'SET favColorId = :favColorId',
+            ExpressionAttributeValues: {
+              ':favColorId': givenFavColorId
+            }
+          })
+        )
+        res.enforcer?.send(`Favorite Color For ${givenByuId} Updated To: ${givenFavColorName}`)
       } catch (e) {
         logger.error(e, 'Error: ')
         res.enforcer?.status(500).send('Error updating favorite color')
@@ -57,17 +72,19 @@ export default function (dbClient: DynamoDBDocumentClient, tableName: string): R
     async addFavoriteColor (req: Request, res: Response) {
       try {
         const givenByuId: string = req.enforcer?.params.byuId
-        const givenFavColor: string = req.enforcer?.body.favColor
+        const givenFavColorId: string = req.enforcer?.body.favColorId
+        const givenFavColorName: string = req.enforcer?.body.favColorName
         await dbClient.send(
           new PutCommand({
             TableName: tableName,
             Item: {
               byuId: givenByuId,
-              favColor: givenFavColor
+              favColorName: givenFavColorName,
+              favColorId: givenFavColorId
             }
           })
         )
-        res.enforcer?.send(`Student  ${givenByuId} Added With Favorite Color: ${givenFavColor}`)
+        res.enforcer?.send(`Student ${givenByuId} Added With Favorite Color: ${givenFavColorName}`)
       } catch (e) {
         logger.error(e, 'Error: ')
         res.enforcer?.status(500).send('Error adding favorite color')
