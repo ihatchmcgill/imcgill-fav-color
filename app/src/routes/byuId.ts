@@ -20,13 +20,13 @@ export default function (dbClient: DynamoDBDocumentClient, tableName: string): R
         if (item != null) {
           const favColorName = item.favColorName
           const favColorId = item.favColorId
-            const name = item.name
+          const name = item.name
           logger.info(favColorName)
           res.enforcer?.send({
             byuId: givenByuId,
             favColorName,
             favColorId,
-              name
+            name
           })
         } else {
           res.enforcer?.status(404).send('Not Found')
@@ -76,13 +76,13 @@ export default function (dbClient: DynamoDBDocumentClient, tableName: string): R
         const givenByuId: string = req.enforcer?.params.byuId
         const givenFavColorId: string = req.enforcer?.body.favColorId
         const givenFavColorName: string = req.enforcer?.body.favColorName
-          const studentName: string = req.enforcer?.body.name
+        const studentName: string = req.enforcer?.body.name
         await dbClient.send(
           new PutCommand({
             TableName: tableName,
             Item: {
               byuId: givenByuId,
-                name: studentName,
+              name: studentName,
               favColorName: givenFavColorName,
               favColorId: givenFavColorId
             }
